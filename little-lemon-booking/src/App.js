@@ -1,20 +1,21 @@
 import './App.css';
-import Header from './Header.js';
-import './Nav.js';
-import Main from './Main.js';
+import React from "react";
 import Footer from './FooterL.js';
 import NavigationBar from './Nav.js';
+import Main from './Main.js';
 
 
 function App() {
 
     return (
-            <div>
-              <Header />
+           <div>
+              <React.Fragment>
               <NavigationBar />
-              <Main />
+               <Main />
               <Footer />
-            </div>
+              </React.Fragment>
+              </div>
+
           );
 
 }
