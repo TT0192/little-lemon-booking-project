@@ -1,22 +1,30 @@
 import React from "react";
 import { useState } from "react";
+import { submitAPI } from "./Api";
+import { useNavigate } from "react-router-dom";
 
 const BookingForm = (props) => {
     const [occasion, setOccasion] = useState("");
     const [guests, setGuest] = useState("");
     const [date, setDate] = useState("");
-    const [times, setTimes] = useState("");
+    const [finalTime, setFinalTime] = useState(props.availableTimes.map((times) => <option>{times}</option>));
+    const navigate = useNavigate();
+    
 
+    const handleDateChange = (e) => {
+        setDate (e.target.value);
+        var stringify = e.target.value;
+        const date = new Date(stringify);
+        props.updateTimes(date);
+        setFinalTime(props.availableTimes.map((times) => <option>{times}</option>));
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
-        props.submitForm(e);
+        const formDate = {date, occasion, guests};
+        if (submitAPI(formDate) === true){
+            navigate('/confirmed')
+        }
     };
-
-    const handleChange = (e) => {
-        setDate (e);
-        props.dispatch (e);
-    }
-
     return (
         <header>
             <section>
@@ -24,17 +32,12 @@ const BookingForm = (props) => {
                     <fieldset>
                         <div>
                             <label htmlFor="book-date">Choose Date</label>
-                            <input id="book-date" value={date} onChange={(e) => handleChange(e.target.value)} type="date" required/>
+                            <input type="date" id="book-date" label="date" required min={new Date().toISOString().slice(0,10)} value={date} onChange={handleDateChange} />
                         </div>
                         <div>
                             <label htmlFor="book-time">Choose Time</label>
-                            <select id="book-time" value={times} onChange={(e) => setTimes(e.target.value)} required>
-                            <option value="">Select a Time</option>
-                            <option>17:00</option>
-                            <option>18:00</option>
-                            <option>19:00</option>
-                            <option>20:00</option>
-                            <option>21:00</option>
+                            <select id="book-time" required>
+                                {finalTime}
                             </select>
                         </div>
                         <div>
